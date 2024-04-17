@@ -9,6 +9,20 @@ from folium.plugins import MousePosition
 import plotly.express as px
 import copy
 
+
+# Title and Description
+st.title('LA County Facility Emissions Dashboard')
+st.markdown("""
+This interactive dashboard was created for the purpose of visualizing hazardous air pollutant (HAP) and criteria air pollutant (CAP) emission data by 
+facility type and concentration in Los Angeles County. Most importantly, this script can be applied to any county in the US by using the National Emissions 
+Inventory Data which is made public by the Environmental Protection Agency. Datasets for any county in the US can be obtained by using the NEI Data Retrieval 
+Tool for 2020. In the tool, simply select a pollutant from the dropdown menu to see point sources of where the pollutant comes from on the map. The tool also 
+has a heat map function to visualize the magnitude of the chosen pollutant coming from areas on the map. Zooming into the map using either your mouse wheel or 
+the plus and minus buttons in the top left allows users to see the individual point source facilities represented by pins. Hovering your cursor over a pin will 
+display a pop up that gives the user information on the name of the facility, the state/county the facility is in with associated EPA region number, and the amount 
+of emissions of the users chosen pollutant in tons.
+""")
+
 @st.cache(allow_output_mutation=True)
 def load_data():
     file_path = 'data/2020_NEI_LACounty_Facilities.xlsx'
@@ -68,7 +82,7 @@ def update_map(selected_pollutant):
     
     if selected_gdf is not None:
         # Group facilities by their coordinates and sum emissions
-        grouped_data = selected_gdf.groupby(['Latitude', 'Longitude'])['Emissions (Tons)'].sum().round(2)
+        grouped_data = selected_gdf.groupby(['Latitude', 'Longitude'])['Emissions (Tons)'].sum()
         
         # Create HeatMap layer
         heat_data = [[lat, lon, emissions] for (lat, lon), emissions in grouped_data.items()]
